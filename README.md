@@ -3,8 +3,7 @@
 **Integrantes:**
 
 * Jan Carlos Pérez González ([@wwJCarlosPG](https://github.com/wwJCarlosPG))
-* Lidier Robaina Caraballo ([@lido98](https://github.com/lido98))
-
+  
 **Objetivo:** Diseñar e implementar en Haskell un lenguaje de dominio específico (DSL) para simular flujos de trabajo en experimentos de tamizaje virtual.
 
 ## Tamizaje Virtual
