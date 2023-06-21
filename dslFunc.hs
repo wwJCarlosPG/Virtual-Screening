@@ -199,20 +199,3 @@ filterTuple :: (Int -> Bool) -> [(String, String)] -> [(String, String)]
 filterTuple r xs = [t | t@(_, b) <- xs, r (length b)]
 
  -- FIN DE FUNCIONES AUXILIARES
-
-
-
-
-
-
-
---TESTS
-substrings :: String -> [String]
-substrings str = [substring i j str | i <- [0..length str], j <- [i..length str]]
-  where substring i j s = take (j - i) (drop i s)  --con take tomo los primeros j-i caracters
-
-maxSubstringLength :: String -> String -> Int
-maxSubstringLength str1 str2 = maximum [length s | i <- [0..length str1], j <- [i..length str1], let s = substring i j str1, isInfixOf s str2]
-  where substring i j s = take (j - i) (drop i s)
-
-
