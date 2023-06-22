@@ -29,28 +29,11 @@ Las principales ventajas de usar un DSL para experimentos de tamizaje virtual so
 A continuación se muestra un ejemplo de código donde se reflejan las ventajas anteriores, además de ser un primer acercamiento a la sintaxis del DSL a implementar:
 
 ```
-EXPERIMENT inhibitors_SARSCov2 {
-    PREPROCESSING {                                  # First phase of the experiment
-        VALIDATE file "data_base.txt"  
-        LOAD_TARGET mpro file
-        LOAD_CANDIDATES inhibitors file
-        SELECT inhibitors (LENGTH < 100)
-    }
-    DOCKING {                                        # Second phase of the experiment
-        LONGEST_COMMON_SUBSEQUENCE  mpro inhibitors  
-    }
-    ANALYSIS {                                       # Third phase of the experiment
-        FILTER 5              
-    }
-}
-
-# Define each step of the experiment
-STEP VALIDATE file_name file_path { ... }
-STEP LOAD_TARGET target_name file_to_load_from { ... }
-...
-
-inhibitors_SARSCov2   # Run the experiment
+Select bullseye from source.txt apply function saveIn dest.txt
 ```
+donde se define la diana(bullseye) de cierto fichero y se aplica la funcion function y
+los resultados se guardan en dest.txt.
+
 
 ## Haskell
 

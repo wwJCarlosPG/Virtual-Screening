@@ -7,8 +7,7 @@ import Data.Maybe (fromMaybe)
 import Data.Char
 import Prelude
 import Data.Function.Memoize
-
-
+import DSLData (hidrophobAA)
 
 --TRABAJO CON LAS LISTAS Y LOS TXTs
 {-devuelve la lista de lineas(cadenas) dado una direccion en forma de cadena(String)
@@ -64,7 +63,7 @@ getOnlyIds (x1:x2:x3:xs) = [x1] ++ getOnlyIds xs
 
 
 --FUNCIONES DE SIMILITUD
-{-devuevle el tamanno de la subcadena maxima comun-}
+{-devuevle la cantidad de caracteres repetidos que hay en ambas cadenas-}
 lcs :: String->String->Int    
 lcs [] _ = 0
 lcs _ [] = 0
@@ -137,7 +136,7 @@ getTuples path bs resultsOfSF nameOfFile = do
    let tuples = zip strings resultsOfSF
    let sortedTuples = sortBy compareTuples tuples  
    let strRes = map show sortedTuples
-   writeFile (nameOfFile++".txt") (unlines strRes)
+   writeFile (nameOfFile) (unlines strRes)
 
 {-Recibe una funcion de similitud, la direccion donde esta el txt
 y la diana y devuelve una lista de enteros, donde cada entero es el resultado de aplicar la funcion de similitd
@@ -198,4 +197,22 @@ filterProteins file comp =
 filterTuple :: (Int -> Bool) -> [(String, String)] -> [(String, String)]
 filterTuple r xs = [t | t@(_, b) <- xs, r (length b)]
 
+sortedHidrophob::String->[String]
+sortedHidrophob file =
+  let prot = getOnlyProteins (listOfLines file)
+      ids = getOnlyIds (listOfLines file)
+      hidrophobIn = map hidrophobIndex prot
+      tup = zip ids hidrophobIn
+      sortedTup = sortBy compareTuples tup
+      res = map fst sortedTup
+  in res
+
+
+hidrophobIndex::String->Int
+hidrophobIndex [] = 0
+hidrophobIndex (x:xs) | elem x hidrophobAA == True = 1 + hidrophobIndex xs
+                      | otherwise = hidrophobIndex xs
+
  -- FIN DE FUNCIONES AUXILIARES
+
+
