@@ -169,7 +169,7 @@ getIndex item list = elemIndex item list
 
 
 {--}
-compareTuples :: (String,Int) -> (String, Int) -> Ordering
+compareTuples :: (a,Int) -> (a, Int) -> Ordering
 compareTuples (_,x) (_,y) = compare x y
 
 {-Retorna la suma de todos los valores numericos de los caracteres-}
@@ -191,8 +191,7 @@ getSimFunc sf bs (x:xs) = [sf bs x]++getSimFunc sf bs xs
 getASCII:: Char->Int
 getASCII c = (ord c)
 
-{-Filtra la lista de tuplas (IdProteina, Proteina) segun el length de la proteina
-aplicado a la funcion de comparacion-}
+{-filtra las proteinas, recibe el file y la funcion de filtrado-}
 filterProteins:: String->(Int->Bool)->[String]
 filterProteins file comp = 
   let proteins = getOnlyProteins (listOfLines file)
@@ -201,6 +200,15 @@ filterProteins file comp =
       filteredTup = filterTuple comp  tup
       filteredIds = map fst filteredTup
   in filteredIds
+
+{-filtra igual pero devuelve la tupla-}
+filterTuplesToResponse::String->(Int->Bool)->[(String, String)]
+filterTuplesToResponse file cond = 
+  let proteins = getOnlyProteins (listOfLines file)
+      ids = getOnlyIds (listOfLines file)
+      tup = zip ids proteins
+      filteredTup = filterTuple cond tup
+  in filteredTup
 
 {-Filtra la lista de tuplas (String, String) segun el tamanno del segundo elemento de la tupla.-}
 filterTuple :: (Int -> Bool) -> [(String, String)] -> [(String, String)]
@@ -216,16 +224,40 @@ sortedHidrophob file =
       res = map fst sortedTup
   in res
 
+{-Recibe el file y la funcion de ordenacion y devuelve la coleccion de ids ordenada-}
+sortingFunc::String-> (String->Int)->[String]
+sortingFunc file sFunc = 
+  let prot = getOnlyProteins (listOfLines file)
+      ids = getOnlyIds (listOfLines file)
+      sItems = map sFunc prot
+      tup = zip ids sItems
+      sortedTup = sortBy compareTuples tup
+      res = map fst sortedTup
+  in res
 
+{-Recibe el file y la funcion de ordenacion y devuelve la coleccion de tupalas id-prot-}
+sortingFuncTup::String->(String->Int)->[(String, String)]
+sortingFuncTup file sFunc = 
+  let prot = getOnlyProteins (listOfLines file)
+      ids = getOnlyIds (listOfLines file)
+      sItems = map sFunc prot
+      tup = zip (zip ids prot) sItems
+      sortedTup = sortBy compareTuples tup
+      res = map fst sortedTup
+  in res
+
+{-Funcion de ordenacion por hidrofobicidad-}
 hidrophobIndex::String->Int
 hidrophobIndex [] = 0
 hidrophobIndex (x:xs) | elem x hidrophobAA == True = 1 + hidrophobIndex xs
                       | otherwise = hidrophobIndex xs
-
- -- FIN DE FUNCIONES AUXILIARES
 
 writeWithSpace :: String -> [(String,String)]->IO()
 writeWithSpace path tup = writeFile path formattedTuples
   where
     formattedTuples = intercalate "\n" (map formatTuple tup)
     formatTuple (x,y) = x ++ "\n" ++y++"\n"
+
+
+ -- FIN DE FUNCIONES AUXILIARES
+
