@@ -3,7 +3,7 @@
 **Integrantes:**
 
 * Jan Carlos Pérez González ([@wwJCarlosPG](https://github.com/wwJCarlosPG))
-  
+
 **Objetivo:** Diseñar e implementar en Haskell un lenguaje de dominio específico (DSL) para simular flujos de trabajo en experimentos de tamizaje virtual.
 
 ## Tamizaje Virtual
@@ -29,11 +29,15 @@ Las principales ventajas de usar un DSL para experimentos de tamizaje virtual so
 A continuación se muestra un ejemplo de código donde se reflejan las ventajas anteriores, además de ser un primer acercamiento a la sintaxis del DSL a implementar:
 
 ```
-Select bullseye from source.txt apply function saveIn dest.txt
+Select bullseye from source.txt apply function
 ```
 donde se define la diana(bullseye) de cierto fichero y se aplica la funcion function y
 los resultados se guardan en dest.txt.
-
+Pero también para aprovechar uno de los puntos fuertes(funciones de orden superior) de la programación funcional, existen instrucciones de este tipo:
+```
+Put Select bullseye from source.txt apply function in dest.txt
+```
+Que lo que hace, básicamente, es ejecutar el comando visto anteriormente y guardar sus resultados en el archivo especificado (dest.txt).
 
 ## Haskell
 

@@ -26,7 +26,7 @@ main = do
         Just (SortRequest {file = file, sortingFunction = sortingFunction}) -> do
             let sValues = sortValue file sortingFunction
             putStrLn sValues
-            putStrLn $ "SuccessfullyCompleted"
+            putStrLn $ "Successfully completed"
         Just (PutRequest{request=request, fileToSave = fileToSave})->do
             let tailLessRequest = init request
             let stringRequest = unwords tailLessRequest
@@ -38,11 +38,13 @@ main = do
                     writeFile fileToSave strTuples
                     putStrLn $ "Successfully completed"
                 Just (OpenRequest{file=file, condition = condition})->do
-                    let filteredProteins = openValue file condition
-                    writeFile fileToSave filteredProteins
+                    let cond = parseCondition condition
+                    let fTups = filterTuplesToResponse file (fromMaybe (const True) cond)
+                    writeWithSpace fileToSave fTups
                     putStrLn $ "Successfully completed"
                 Just (SortRequest {file = file, sortingFunction})->do
-                    let sValues = sortValue file sortingFunction
-                    writeFile fileToSave sValues
+                    let sFunc = parseSortingFunction sortingFunction
+                    let sortedTup = sortingFuncTup file (fromJust sFunc)
+                    writeWithSpace fileToSave sortedTup
                     putStrLn $ "Successfully completed"
 

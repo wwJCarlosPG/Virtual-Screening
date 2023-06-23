@@ -21,17 +21,9 @@ parseCondition s = case s of
         equalTo x = (== x)
 
 {-parsea la funcion de ordenacion-}
-parseSortingFunction::String->Maybe(String->[String])
+parseSortingFunction::String->Maybe(String->Int)
 parseSortingFunction s = case s of
-    "sortedHidrophob"->Just sortedHidrophob
-    _ -> Nothing
-
-{-parsea la tupla-}
-parseTuple::String->Maybe(String, Int)
-parseTuple line = case words (filter (/=',')line) of
-    [id, val] -> do
-        intVal <- readMaybe val
-        return (id, intVal)
+    "hidrophobIndex"->Just hidrophobIndex
     _ -> Nothing
 
 {-parsea la funcion de similitud-}
@@ -82,6 +74,6 @@ sortValue file sortingFunction =
     result
     where
         sortFunc = parseSortingFunction sortingFunction
-        sFunc = (fromJust sortFunc) file
+        sFunc = sortingFunc file (fromJust sortFunc)
         result = (unlines sFunc)
             
