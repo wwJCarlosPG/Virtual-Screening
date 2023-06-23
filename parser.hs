@@ -47,9 +47,41 @@ parseFunction s = case s of
 {-parsea la entrada-}
 parseInput :: String -> Maybe Request
 parseInput input = case words input of
-    ["Select", bullseye, "from", file, "apply" ,function, "saveIn", fileToSave]->Just $ SelectRequest bullseye file function fileToSave
+    ["Select", bullseye, "from", file, "apply" ,function]->Just $ SelectRequest bullseye file function
     ["Open", file, "where", condition] -> Just $ OpenRequest file condition
-    ["Open", file, "where", condition, "saveIn", fileToSave] ->Just $ OpenAndSaveRequest file condition fileToSave
     ["Open", file,"sortBy", sortingFunction ]->Just $ SortRequest file sortingFunction
-    ["Put(" ,request, ")in", file] -> Just $ PutRequest request file
+    ("Put":xs) -> Just $ PutRequest (init xs) (last xs)
     _ -> Nothing
+
+
+
+--FUNCIONES QUE DEVUELVEN LA CONSOLA
+{-Retorna el valor que se imprime cuando se elige la funcion select-}
+selectValue::String->String->String->String
+selectValue bs file function = 
+    result
+    where
+        func = parseFunction function
+        sf = simFunc (fromJust func) file bs
+        tuples = getTuples file bs sf
+        strTup = map show tuples        
+        result = (unlines strTup)
+
+{-Retorna el valor que se imprime cuando se elige la funcion open-}
+openValue::String->String->String
+openValue file condition = 
+    result
+    where
+        cond = parseCondition condition
+        filteredProteins = filterProteins file (fromMaybe (const True) cond)
+        result = unlines filteredProteins
+
+{-Retorna el valor que se imprime cuando se elige la funcion sort-}
+sortValue::String->String->String
+sortValue file sortingFunction = 
+    result
+    where
+        sortFunc = parseSortingFunction sortingFunction
+        sFunc = (fromJust sortFunc) file
+        result = (unlines sFunc)
+            

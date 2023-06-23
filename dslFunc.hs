@@ -2,6 +2,8 @@ module DSLFunc
 where
 import System.Directory
 import Data.List
+import Data.List (intercalate)
+import qualified Data.Text.IO as TIO
 import System.IO.Unsafe
 import Data.Maybe (fromMaybe)
 import Data.Char
@@ -86,17 +88,18 @@ levenshtein (x:xs) (y:ys) |x==y = levenshtein xs ys
 
 {-calcula el numero de transformaciones elementales que hay que hacerle a una
 cadena para convertirla en otra, pero en esta caso se usa memoization ya que el metodo
-simple es muy lento para grandes cadenas.-}
-levenshteinM :: String->String->Int
-levenshteinM = memoize2 levenshteinM'
+simple es muy lento para grandes cadenas, incluso este no es muy recomendable usarlo.-}
+levenshteinM :: String -> String -> Int
+levenshteinM xs ys = table m n
   where
-    levenshteinM' [] ys = length ys
-    levenshteinM' xs [] = length xs
-    levenshteinM' (x:xs) (y:ys)
-      | x == y = levenshteinM xs ys
-      | otherwise = minimum [1 + levenshteinM xs (y:ys),
-                              1 + levenshteinM (x:xs) ys,
-                              1 + levenshteinM xs ys]
+    m = length xs
+    n = length ys
+    table = memoize2 dist
+    dist 0 j = j
+    dist i 0 = i
+    dist i j
+      | xs !! (i-1) == ys !! (j-1) = table (i-1) (j-1)
+      | otherwise = minimum [table (i-1) j, table i (j-1), table (i-1) (j-1)] + 1
 
 {-devuelve la diferencia de valores numericos de cada caracter y si hay espacio en blanco le suma 1 a ese valor
 Ejemplo: "ABCD" "ABC" devuelve 1
@@ -130,13 +133,14 @@ Id de la proteina diana(D)
 Array de enteros que seria simFunc(funcion de similitud, (A), (D))
 Nombre del archivo donde se guardaran los resultados(ejemplo: "archivo", sin la extension)
 -}
-getTuples:: String -> String->[Int]->String->IO()    
-getTuples path bs resultsOfSF nameOfFile = do                  
-   let strings = idsWoutBS path bs 
-   let tuples = zip strings resultsOfSF
-   let sortedTuples = sortBy compareTuples tuples  
-   let strRes = map show sortedTuples
-   writeFile (nameOfFile) (unlines strRes)
+getTuples:: String -> String->[Int]->[(String, Int)]    
+getTuples path bs resultsOfSF = 
+  result   
+  where             
+    strings = idsWoutBS path bs 
+    tuples = zip strings resultsOfSF
+    sortedTuples = sortBy compareTuples tuples  
+    result =  sortedTuples
 
 {-Recibe una funcion de similitud, la direccion donde esta el txt
 y la diana y devuelve una lista de enteros, donde cada entero es el resultado de aplicar la funcion de similitd
@@ -154,10 +158,15 @@ simFunc sf path bs =
 
 
 
+
+
+
+
 --FUNCIONES AUXILIARES
 {-Devuelve el indice de un elemento en una lista dada-}
 getIndex :: Eq a => a -> [a] -> Maybe Int
 getIndex item list = elemIndex item list
+
 
 {--}
 compareTuples :: (String,Int) -> (String, Int) -> Ordering
@@ -215,4 +224,8 @@ hidrophobIndex (x:xs) | elem x hidrophobAA == True = 1 + hidrophobIndex xs
 
  -- FIN DE FUNCIONES AUXILIARES
 
-
+writeWithSpace :: String -> [(String,String)]->IO()
+writeWithSpace path tup = writeFile path formattedTuples
+  where
+    formattedTuples = intercalate "\n" (map formatTuple tup)
+    formatTuple (x,y) = x ++ "\n" ++y++"\n"
