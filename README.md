@@ -18,15 +18,15 @@ Las ditintas etapas del proceso de tamizaje de virtual poseen un signifactivo ni
 * Para calcular la afinidad entre la diana y los candidatos a fármacos se emplearán medidas ficticias basadas en diferentes funciones de similitud entre cadenas.
 * Los archivos de entrada y salida serán archivos de texto plano, y contendrán las estructuras de las moléculas y los resultados de la simulación respectivamente.
 
-## DSL
+## CLI
 
-Las principales ventajas de usar un DSL para experimentos de tamizaje virtual son:
+Las principales ventajas de usar un CLI para experimentos de tamizaje virtual son:
 
 * Facilidad de uso para usuarios del dominio respecto a herramientas genéricas de programación
 * Claridad y legibilidad del proceso
 * Personalización, reutilización y automatización de los experimentos
 
-A continuación se muestra un ejemplo de código donde se reflejan las ventajas anteriores, además de ser un primer acercamiento a la sintaxis del DSL a implementar:
+A continuación se muestra un ejemplo de código donde se reflejan las ventajas anteriores, además de ser un primer acercamiento a la sintaxis del CLI a implementar:
 
 ```
 Select bullseye from source.txt apply function
@@ -43,8 +43,8 @@ Que lo que hace, básicamente, es ejecutar el comando visto anteriormente y guar
 
 Haskell es una tecnología adecuada para desarrollar este proyecto, pues:
 
-* Tiene una sintaxis clara y concisa que permite expresar ideas complejas con una cantidad mínima de código, lo que puede hacer que la sintaxis del DSL sea más fácil de leer y entender para los usuarios.
+* Tiene una sintaxis clara y concisa que permite expresar ideas complejas con una cantidad mínima de código, lo que puede hacer que la sintaxis del CLI sea más fácil de leer y entender para los usuarios.
 * Características de la programación funcional como las funciones de orden superior facilitan la creación de abstracciones de alto nivel y la definición de nuevas operaciones en el DSL.
-* La evaluación perezosa permite la creación de DSLs que sean muy eficientes en términos de memoria y tiempo de ejecución.
-* Tiene una biblioteca de análisis léxico y sintáctico llamada Parsec, que permite la creación de analizadores léxicos y sintácticos para un DSL de manera fácil y eficiente, lo que hace que sea más fácil definir la sintaxis del DSL y analizar el código generado por el DSL.
+* La evaluación perezosa permite la creación de CLIs que sean muy eficientes en términos de memoria y tiempo de ejecución.
+* Tiene una biblioteca de análisis léxico y sintáctico llamada Parsec, que permite la creación de analizadores léxicos y sintácticos para un DSL de manera fácil y eficiente, lo que hace que sea más fácil definir la sintaxis del DSL y analizar el código generado por el CLI.
 
